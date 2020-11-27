@@ -5,12 +5,14 @@
 # ash script
 # ash script hostname
 
-#if [ $# -ne 1]; then
-#    echo "Usage: $0 <hostname>"
-#    exit
-#fi
-#
+if [ $# -ne 1 ]; then
+    echo "Usage: $0 <hostname>"
+    exit
+fi
+
 hostname=$1
+
+echo "Using $hostname"
 
 # asignar IP & MAC en anarcosala
 # http://192.168.98.1/cgi-bin/luci/admin/network/dhcp
