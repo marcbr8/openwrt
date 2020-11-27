@@ -5,14 +5,16 @@
 # ash script
 # ash script hostname
 
-if [ $# -ne 1 ]; then
-    echo "Usage: $0 <hostname>"
-    exit
+if [ $# -ne 1 ] && [ $# -ne 2 ]; then
+    echo "Usage: $0 <hostname> <SSID>"
+    exit 1
 fi
 
 hostname=$1
+ssid=$2
 
-echo "Using $hostname"
+echo "Using $hostname as hostname"
+echo "Using $ssid as SSID"
 
 # asignar IP & MAC en anarcosala
 # http://192.168.98.1/cgi-bin/luci/admin/network/dhcp
@@ -27,7 +29,7 @@ uci set network.lan.proto='dhcp'
 
 #/etc/config/wireless
 uci set wireless.default_radio0.key='autogestioning'
-uci set wireless.default_radio0.ssid='CanMasdeu'
+uci set wireless.default_radio0.ssid='$ssid'
 uci set wireless.default_radio0.encryption='psk2'
 uci set wireless.radio0.channel='auto'
 
