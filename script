@@ -5,13 +5,14 @@
 # ash script
 # ash script hostname
 
-if [ $# -ne 1 ] && [ $# -ne 2 ]; then
-    echo "Usage: $0 <hostname> <SSID>"
+if [$# -ne 3 ] ; then
+    echo "Usage: $0 <hostname> <SSID> <password>"
     exit 1
 fi
 
 hostname=$1
 ssid=$2
+pwd=$3
 
 echo "Using $hostname as hostname"
 echo "Using $ssid as SSID"
@@ -28,8 +29,8 @@ uci del network.lan.ip6assign
 uci set network.lan.proto='dhcp'
 
 #/etc/config/wireless
-uci set wireless.default_radio0.key='autogestioning'
-uci set wireless.default_radio0.ssid='$ssid'
+uci set wireless.default_radio0.key="$pwd"
+uci set wireless.default_radio0.ssid="$ssid"
 uci set wireless.default_radio0.encryption='psk2'
 uci set wireless.radio0.channel='auto'
 
