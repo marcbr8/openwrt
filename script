@@ -1,0 +1,50 @@
+#!/bin/ash
+# para copiar:
+# scp Downloads/script root@192.168.1.1:/tmp/
+# en la maquina:
+# ash script
+# ash script hostname
+
+#if [ $# -ne 1]; then
+#    echo "Usage: $0 <hostname>"
+#    exit
+#fi
+#
+hostname=$1
+
+# asignar IP & MAC en anarcosala
+# http://192.168.98.1/cgi-bin/luci/admin/network/dhcp
+# change passwd
+
+# /etc/config/network
+uci set dhcp.lan.ra_management='1'
+uci del network.lan.ipaddr
+uci del network.lan.netmask
+uci del network.lan.ip6assign
+uci set network.lan.proto='dhcp'
+
+#/etc/config/wireless
+uci set wireless.default_radio0.key='autogestioning'
+uci set wireless.default_radio0.ssid='CanMasdeu'
+uci set wireless.default_radio0.encryption='psk2'
+uci set wireless.radio0.channel='auto'
+
+cat << EOF > /etc/crontabs/root
+0 1,3,5 * * * wifi down
+2 6 * * * reboot
+10 * * * * ntpd -q -p 192.168.98.1
+EOF
+
+# /etc/config/system
+uci del system.ntp.enabled
+uci del system.ntp.enable_server
+uci set system.@system[0].zonename='Europe/Madrid'
+uci set system.@system[0].hostname="$hostname"
+uci set system.@system[0].log_proto='udp'
+uci set system.@system[0].conloglevel='8'
+uci set system.@system[0].cronloglevel='5'
+uci set system.@system[0].timezone='CET-1CEST,M3.5.0,M10.5.0/3'
+
+uci commit
+#nvram commit
+reboot
